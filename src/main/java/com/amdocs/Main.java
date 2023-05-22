@@ -26,8 +26,9 @@ public class Main {
 
         try {
 
-            driver.get(configTS.getUrlBaseAuth());
-            out.println(configTS.getUrlBaseAuth());
+            String url = configTS.getUrlBaseAuth();
+            driver.get(url);
+            out.println(url);
             driver.navigate().refresh();
         } catch (Exception e) {
             out.println(e);

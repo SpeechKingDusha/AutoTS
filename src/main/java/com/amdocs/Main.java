@@ -30,7 +30,7 @@ public class Main {
             out.println(configTS.getUrlBaseAuth());
             driver.navigate().refresh();
         } catch (Exception e) {
-            out.println(e.toString());
+            out.println(e);
             driver.findElement(By.xpath("//body")).sendKeys(Keys.F5);
         }
 

@@ -120,6 +120,6 @@ public class ConfigTS {
             }
         }
 
-        return str;
+        return strbl.toString();
     }
 }

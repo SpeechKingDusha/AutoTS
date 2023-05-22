@@ -48,7 +48,6 @@ public class Main {
                 approveTS(driver);
             }
         }
-        ;
     }
 
     static void saveTS(WebDriver driver) {

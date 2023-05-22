@@ -106,9 +106,9 @@ public class ConfigTS {
     }
 
     static String changeScpec(String str) {
-        StringBuilder strbl = new StringBuilder();
         if (str == null) return null;
 
+        StringBuilder strbl = new StringBuilder();
         for (Map.Entry<Character, String> entry : SPEC_SIMB.entrySet()) {
             //str.replaceAll(entry.getKey().toString(), entry.getValue());
             for (int i = 0; i < str.length(); ++i) {

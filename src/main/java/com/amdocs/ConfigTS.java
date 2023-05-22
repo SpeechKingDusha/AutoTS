@@ -60,7 +60,7 @@ public class ConfigTS {
         return new StringBuilder("https://bell-main%5c" + userName + ":" + password + "@" + URL).toString();
     }
 
-    static public String readFileConfig(File file) {
+    public static String readFileConfig(File file) {
         StringBuilder body = new StringBuilder();
         try (FileReader reader = new FileReader(file)) {
             int c;

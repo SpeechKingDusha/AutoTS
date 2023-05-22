@@ -50,11 +50,11 @@ public class Main {
         }
     }
 
-    static void saveTS(WebDriver driver) {
+    private static void saveTS(WebDriver driver) {
         driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "s");
     }
 
-    static void approveTS(WebDriver driver) throws InterruptedException {
+    private static void approveTS(WebDriver driver) throws InterruptedException {
         new Actions(driver).keyDown(Keys.CONTROL)
                 .keyDown(Keys.SHIFT)
                 .sendKeys("s")
@@ -68,7 +68,7 @@ public class Main {
         driver.close();
     }
 
-    static boolean validate(List<WebElement> linesTable) {
+    private static boolean validate(List<WebElement> linesTable) {
         byte countErrors = 0;
         for (int k = 1; k < 7 && countErrors == 0; ++k) {
             if (!linesTable.get(linesTable.size() - 1).findElements(By.cssSelector("td")).get(k).getText().equals(
@@ -79,7 +79,7 @@ public class Main {
         return countErrors == 0;
     }
 
-    static void populateData(List<WebElement> linesTable, WebDriver driver) {
+    private static void populateData(List<WebElement> linesTable, WebDriver driver) {
         Actions action = new Actions(driver);
         for (int i = 2; i < linesTable.size() - 2; i += 2) {
             for (int k = 1; k < 7; ++k) {

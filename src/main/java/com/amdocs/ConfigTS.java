@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigTS {
-    private static final Map<Character, String> SPEC_SIMB = new HashMap<Character, String>();
+    private static final Map<Character, String> SPEC_SIMB = new HashMap<>();
 
     static {
         SPEC_SIMB.put('\"', "%22");

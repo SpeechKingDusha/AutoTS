@@ -10,26 +10,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigTS {
-    private Map<Character, String> specSimb = new HashMap<Character, String>();
+    private static final Map<Character, String> SPEC_SIMB = new HashMap<Character, String>();
 
-    {
-        specSimb.put('\"', "%22");
-        specSimb.put('<', "%3c");
-        specSimb.put('^', "%5e");
-        specSimb.put('#', "%23");
-        specSimb.put('>', "%3e");
-        specSimb.put('{', "%7b");
-        specSimb.put('}', "%7d");
-        specSimb.put('|', "%7c");
-        specSimb.put('\\', "%5c");
-        specSimb.put('[', "%5b");
-        specSimb.put(']', "%5d");
-        specSimb.put('`', "%60");
-        specSimb.put('~', "%7e");
-        specSimb.put('\'', "%20");
+    static {
+        SPEC_SIMB.put('\"', "%22");
+        SPEC_SIMB.put('<', "%3c");
+        SPEC_SIMB.put('^', "%5e");
+        SPEC_SIMB.put('#', "%23");
+        SPEC_SIMB.put('>', "%3e");
+        SPEC_SIMB.put('{', "%7b");
+        SPEC_SIMB.put('}', "%7d");
+        SPEC_SIMB.put('|', "%7c");
+        SPEC_SIMB.put('\\', "%5c");
+        SPEC_SIMB.put('[', "%5b");
+        SPEC_SIMB.put(']', "%5d");
+        SPEC_SIMB.put('`', "%60");
+        SPEC_SIMB.put('~', "%7e");
+        SPEC_SIMB.put('\'', "%20");
     }
 
-    final String url = "prj.bi-telco.com/pwa/Timesheet.aspx";
+    private static final String URL = "prj.bi-telco.com/pwa/Timesheet.aspx";
+
     private String userName;
     private String password;
     private boolean isTestedMode;
@@ -60,7 +61,7 @@ public class ConfigTS {
     }
 
     public String getUrlBaseAuth() {
-        return new StringBuilder("https://bell-main%5c" + userName + ":" + password + "@" + url).toString();
+        return new StringBuilder("https://bell-main%5c" + userName + ":" + password + "@" + URL).toString();
     }
 
     static public String readFileConfig(File file) {
@@ -76,7 +77,7 @@ public class ConfigTS {
         return body.toString();
     }
 
-    private String decodingPassword(String password) {
+    private static String decodingPassword(String password) {
         var pas = password.toCharArray();
         int sumCodeWord = 0;
         String codeWord = new String();
@@ -106,11 +107,11 @@ public class ConfigTS {
         isTestedMode = testedMode;
     }
 
-    private String changeScpec(String str) {
+    private static String changeScpec(String str) {
         StringBuffer strbl = new StringBuffer();
         if (str == null) return null;
 
-        for (Map.Entry<Character, String> entry : specSimb.entrySet()) {
+        for (Map.Entry<Character, String> entry : SPEC_SIMB.entrySet()) {
             //str.replaceAll(entry.getKey().toString(), entry.getValue());
             for (int i = 0; i < str.length(); ++i) {
                 if (!entry.getKey().equals(str.charAt(i))) {

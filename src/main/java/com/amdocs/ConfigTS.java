@@ -105,7 +105,7 @@ public class ConfigTS {
         isTestedMode = testedMode;
     }
 
-    private static String changeScpec(String str) {
+    static String changeScpec(String str) {
         StringBuffer strbl = new StringBuffer();
         if (str == null) return null;
 

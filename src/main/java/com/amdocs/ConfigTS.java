@@ -36,12 +36,12 @@ public class ConfigTS {
         ConfigTS configTS = new Gson().fromJson(jsonConf, ConfigTS.class);
         userName = configTS.userName;
         //Password = changeScpec(DecodingPassword(configTS.Password));
-        password = changeScpec(configTS.password);
+        password = configTS.password;
         isTestedMode = configTS.isTestedMode;
     }
 
     public String getUsername() {
-        return userName;
+        return "bell-main\\" + userName;
     }
 
     public void setUsername(String userName) {
@@ -56,8 +56,10 @@ public class ConfigTS {
         this.password = password;
     }
 
-    public String getUrlBaseAuth() {
-        return new StringBuilder("https://bell-main%5c" + userName + ":" + password + "@" + URL).toString();
+    public String getUrlBaseAuth(boolean authenticateByUrl) {
+        return authenticateByUrl
+                ? new StringBuilder("https://" + changeScpec(getUsername()) + ":" + changeScpec(getPassword()) + "@" + URL).toString()
+                : new StringBuilder("https://" + URL).toString();
     }
 
     public static String readFileConfig(File file) {

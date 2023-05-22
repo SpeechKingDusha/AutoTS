@@ -25,8 +25,14 @@ public class Main {
         driver.manage().window().setSize(new Dimension(1920, 1080));
 
         try {
-
-            String url = configTS.getUrlBaseAuth();
+            boolean authenticateByUrl;
+            if (driver instanceof HasAuthentication) {
+                ((HasAuthentication) driver).register(() -> new UsernameAndPassword(configTS.getUsername(), configTS.getPassword()));
+                authenticateByUrl = false;
+            } else {
+                authenticateByUrl = true;
+            }
+            String url = configTS.getUrlBaseAuth(authenticateByUrl);
             driver.get(url);
             out.println(url);
             driver.navigate().refresh();

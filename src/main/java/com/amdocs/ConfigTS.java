@@ -6,25 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.Map;
 
 public class ConfigTS {
-    private static final Map<Character, String> SPEC_SIMB = Map.ofEntries(
-            Map.entry('\"', "%22"),
-            Map.entry('<', "%3c"),
-            Map.entry('^', "%5e"),
-            Map.entry('#', "%23"),
-            Map.entry('>', "%3e"),
-            Map.entry('{', "%7b"),
-            Map.entry('}', "%7d"),
-            Map.entry('|', "%7c"),
-            Map.entry('\\', "%5c"),
-            Map.entry('[', "%5b"),
-            Map.entry(']', "%5d"),
-            Map.entry('`', "%60"),
-            Map.entry('~', "%7e"),
-            Map.entry('\'', "%20")
-    );
     private static final String URL = "prj.bi-telco.com/pwa/Timesheet.aspx";
 
     private String userName;
@@ -106,18 +89,7 @@ public class ConfigTS {
     }
 
     static String changeScpec(String str) {
-        if (str == null) return null;
-
-        StringBuilder out = new StringBuilder(str.length());
-        for (int i = 0; i < str.length(); ++i) {
-            char c = str.charAt(i);
-            if (SPEC_SIMB.containsKey(c)) {
-                out.append(SPEC_SIMB.get(c));
-            } else {
-                out.append(c);
-            }
-        }
-
-        return out.toString();
+        return str == null ? null
+                : new com.google.common.net.PercentEscaper("-._", false).escape(str);
     }
 }

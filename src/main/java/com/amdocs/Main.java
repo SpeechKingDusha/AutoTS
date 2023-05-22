@@ -14,9 +14,6 @@ import static java.lang.System.*;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        //setProperty("webdriver.chrome.driver", "/path/to/chromdriver");
-        //System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
-        //System.setProperty("webdriver.chrome.driver", ".\\src\\main\\java\\com\\Amdocs\\chromedriver.exe");
         File file = new File("ConfigurationTS.json");
         //File file = new File(".\\src\\main\\java\\com\\Amdocs\\configurationTS.json");
 

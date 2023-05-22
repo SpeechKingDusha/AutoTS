@@ -108,18 +108,16 @@ public class ConfigTS {
     static String changeScpec(String str) {
         if (str == null) return null;
 
-        StringBuilder strbl = new StringBuilder();
-        for (Map.Entry<Character, String> entry : SPEC_SIMB.entrySet()) {
-            //str.replaceAll(entry.getKey().toString(), entry.getValue());
-            for (int i = 0; i < str.length(); ++i) {
-                if (!entry.getKey().equals(str.charAt(i))) {
-                    strbl.append(str.charAt(i));
-                } else {
-                    strbl.append(entry.getValue());
-                }
+        StringBuilder out = new StringBuilder(str.length());
+        for (int i = 0; i < str.length(); ++i) {
+            char c = str.charAt(i);
+            if (SPEC_SIMB.containsKey(c)) {
+                out.append(SPEC_SIMB.get(c));
+            } else {
+                out.append(c);
             }
         }
 
-        return strbl.toString();
+        return out.toString();
     }
 }

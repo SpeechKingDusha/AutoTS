@@ -57,6 +57,7 @@ public class ConfigTS {
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
+            throw new IllegalStateException("Fail to read config from file " + file, ex);
         }
         return body.toString();
     }

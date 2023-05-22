@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URLEncoder;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ConfigTS {
     private static final String URL = "prj.bi-telco.com/pwa/Timesheet.aspx";
@@ -90,6 +93,6 @@ public class ConfigTS {
 
     static String changeScpec(String str) {
         return str == null ? null
-                : new com.google.common.net.PercentEscaper("-._", false).escape(str);
+                : URLEncoder.encode(str, UTF_8).replace("+", "%20");
     }
 }

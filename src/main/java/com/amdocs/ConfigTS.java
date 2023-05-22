@@ -106,7 +106,7 @@ public class ConfigTS {
     }
 
     static String changeScpec(String str) {
-        StringBuffer strbl = new StringBuffer();
+        StringBuilder strbl = new StringBuilder();
         if (str == null) return null;
 
         for (Map.Entry<Character, String> entry : SPEC_SIMB.entrySet()) {

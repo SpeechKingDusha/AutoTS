@@ -3,10 +3,10 @@ package com.amdocs;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URLEncoder;
+import java.nio.file.Files;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -49,17 +49,12 @@ public class ConfigTS {
     }
 
     public static String readFileConfig(File file) {
-        StringBuilder body = new StringBuilder();
-        try (FileReader reader = new FileReader(file)) {
-            int c;
-            while ((c = reader.read()) != -1) {
-                body.append((char) c);
-            }
+        try {
+            return Files.readString(file.toPath());
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
             throw new IllegalStateException("Fail to read config from file " + file, ex);
         }
-        return body.toString();
     }
 
     private static String decodingPassword(String password) {

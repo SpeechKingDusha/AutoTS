@@ -6,29 +6,25 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigTS {
-    private static final Map<Character, String> SPEC_SIMB = new HashMap<>();
-
-    static {
-        SPEC_SIMB.put('\"', "%22");
-        SPEC_SIMB.put('<', "%3c");
-        SPEC_SIMB.put('^', "%5e");
-        SPEC_SIMB.put('#', "%23");
-        SPEC_SIMB.put('>', "%3e");
-        SPEC_SIMB.put('{', "%7b");
-        SPEC_SIMB.put('}', "%7d");
-        SPEC_SIMB.put('|', "%7c");
-        SPEC_SIMB.put('\\', "%5c");
-        SPEC_SIMB.put('[', "%5b");
-        SPEC_SIMB.put(']', "%5d");
-        SPEC_SIMB.put('`', "%60");
-        SPEC_SIMB.put('~', "%7e");
-        SPEC_SIMB.put('\'', "%20");
-    }
-
+    private static final Map<Character, String> SPEC_SIMB = Map.ofEntries(
+            Map.entry('\"', "%22"),
+            Map.entry('<', "%3c"),
+            Map.entry('^', "%5e"),
+            Map.entry('#', "%23"),
+            Map.entry('>', "%3e"),
+            Map.entry('{', "%7b"),
+            Map.entry('}', "%7d"),
+            Map.entry('|', "%7c"),
+            Map.entry('\\', "%5c"),
+            Map.entry('[', "%5b"),
+            Map.entry(']', "%5d"),
+            Map.entry('`', "%60"),
+            Map.entry('~', "%7e"),
+            Map.entry('\'', "%20")
+    );
     private static final String URL = "prj.bi-telco.com/pwa/Timesheet.aspx";
 
     private String userName;

@@ -43,7 +43,7 @@ public class Main {
         populateData(linesTable, driver);
 
         if (validate(linesTable)) {
-            SaveTS(driver);
+            saveTS(driver);
             if (!configTS.isTestedMode()) {
                 approveTS(driver);
             }
@@ -51,7 +51,7 @@ public class Main {
         ;
     }
 
-    static void SaveTS(WebDriver driver) {
+    static void saveTS(WebDriver driver) {
         driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "s");
     }
 

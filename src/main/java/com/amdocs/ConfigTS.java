@@ -10,57 +10,57 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigTS {
-    private Map<Character, String> SpecSimb = new HashMap<Character, String>();
+    private Map<Character, String> specSimb = new HashMap<Character, String>();
 
     {
-        SpecSimb.put('\"', "%22");
-        SpecSimb.put('<', "%3c");
-        SpecSimb.put('^', "%5e");
-        SpecSimb.put('#', "%23");
-        SpecSimb.put('>', "%3e");
-        SpecSimb.put('{', "%7b");
-        SpecSimb.put('}', "%7d");
-        SpecSimb.put('|', "%7c");
-        SpecSimb.put('\\', "%5c");
-        SpecSimb.put('[', "%5b");
-        SpecSimb.put(']', "%5d");
-        SpecSimb.put('`', "%60");
-        SpecSimb.put('~', "%7e");
-        SpecSimb.put('\'', "%20");
+        specSimb.put('\"', "%22");
+        specSimb.put('<', "%3c");
+        specSimb.put('^', "%5e");
+        specSimb.put('#', "%23");
+        specSimb.put('>', "%3e");
+        specSimb.put('{', "%7b");
+        specSimb.put('}', "%7d");
+        specSimb.put('|', "%7c");
+        specSimb.put('\\', "%5c");
+        specSimb.put('[', "%5b");
+        specSimb.put(']', "%5d");
+        specSimb.put('`', "%60");
+        specSimb.put('~', "%7e");
+        specSimb.put('\'', "%20");
     }
 
-    final String URL = "prj.bi-telco.com/pwa/Timesheet.aspx";
-    private String UserName;
-    private String Password;
+    final String url = "prj.bi-telco.com/pwa/Timesheet.aspx";
+    private String userName;
+    private String password;
     private boolean isTestedMode;
 
 
     public ConfigTS(String jsonConf) {
         ConfigTS configTS = new Gson().fromJson(jsonConf, ConfigTS.class);
-        UserName = configTS.UserName;
+        userName = configTS.userName;
         //Password = changeScpec(DecodingPassword(configTS.Password));
-        Password = changeScpec(configTS.Password);
+        password = changeScpec(configTS.password);
         isTestedMode = configTS.isTestedMode;
     }
 
     public String getUsername() {
-        return UserName;
+        return userName;
     }
 
-    public void setUsername(String username) {
-        UserName = username;
+    public void setUsername(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
     }
 
     public String getUrlBaseAuth() {
-        return new StringBuilder("https://bell-main%5c" + UserName + ":" + Password + "@" + URL).toString();
+        return new StringBuilder("https://bell-main%5c" + userName + ":" + password + "@" + url).toString();
     }
 
     static public String readFileConfig(File file) {
@@ -76,7 +76,7 @@ public class ConfigTS {
         return body.toString();
     }
 
-    private String DecodingPassword(String password) {
+    private String decodingPassword(String password) {
         var pas = password.toCharArray();
         int sumCodeWord = 0;
         String codeWord = new String();
@@ -110,7 +110,7 @@ public class ConfigTS {
         StringBuffer strbl = new StringBuffer();
         if (str == null) return null;
 
-        for (Map.Entry<Character, String> entry : SpecSimb.entrySet()) {
+        for (Map.Entry<Character, String> entry : specSimb.entrySet()) {
             //str.replaceAll(entry.getKey().toString(), entry.getValue());
             for (int i = 0; i < str.length(); ++i) {
                 if (!entry.getKey().equals(str.charAt(i))) {

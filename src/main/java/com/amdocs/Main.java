@@ -2,7 +2,6 @@ package com.amdocs;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.interactions.Actions;
 
@@ -10,13 +9,10 @@ import java.io.File;
 import java.time.Duration;
 import java.util.List;
 
-import static java.lang.System.*;
+import static java.lang.System.out;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        //setProperty("webdriver.chrome.driver", "/path/to/chromdriver");
-        //System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
-        //System.setProperty("webdriver.chrome.driver", ".\\src\\main\\java\\com\\Amdocs\\chromedriver.exe");
         File file = new File("ConfigurationTS.json");
         //File file = new File(".\\src\\main\\java\\com\\Amdocs\\configurationTS.json");
 
@@ -26,18 +22,23 @@ public class Main {
         //WebDriver driver = new ChromeDriver();
         WebDriverManager.edgedriver().setup();
         WebDriver driver = new EdgeDriver();
-        driver.manage().window().setSize(new Dimension(1920,1080));
+        driver.manage().window().setSize(new Dimension(1920, 1080));
 
         try {
-
-            driver.get(configTS.getUrlBaseAuth());
-            out.println(configTS.getUrlBaseAuth());
+            boolean authenticateByUrl;
+            if (driver instanceof HasAuthentication) {
+                ((HasAuthentication) driver).register(() -> new UsernameAndPassword(configTS.getUsername(), configTS.getPassword()));
+                authenticateByUrl = false;
+            } else {
+                authenticateByUrl = true;
+            }
+            String url = configTS.getUrlBaseAuth(authenticateByUrl);
+            driver.get(url);
+            out.println(url);
             driver.navigate().refresh();
-        }
-        catch (Exception e)
-        {
-                out.println(e.toString());
-                driver.findElement(By.xpath("//body")).sendKeys(Keys.F5);
+        } catch (Exception e) {
+            out.println(e);
+            driver.findElement(By.xpath("//body")).sendKeys(Keys.F5);
         }
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -46,19 +47,21 @@ public class Main {
                 .findElement(By.cssSelector("tbody"))
                 .findElements(By.cssSelector("tr"));
 
-        populateData (linesTable, driver );
+        populateData(linesTable, driver);
 
-       if (validate(linesTable)) {
-           SaveTS (driver);
-           if (!configTS.isTestedMode()) {
-               approveTS(driver);
-           }
-       };
+        if (validate(linesTable)) {
+            saveTS(driver);
+            if (!configTS.isTestedMode()) {
+                approveTS(driver);
+            }
+        }
     }
-    static void SaveTS (WebDriver driver){
-        driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL +"s");
+
+    private static void saveTS(WebDriver driver) {
+        driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "s");
     }
-    static void approveTS(WebDriver driver) throws InterruptedException {
+
+    private static void approveTS(WebDriver driver) throws InterruptedException {
         new Actions(driver).keyDown(Keys.CONTROL)
                 .keyDown(Keys.SHIFT)
                 .sendKeys("s")
@@ -71,20 +74,22 @@ public class Main {
                 .findElement(By.id("ctl00_ctl00_PlaceHolderMain_idOkButton")).click();
         driver.close();
     }
-    static boolean validate (List<WebElement> linesTable ){
+
+    private static boolean validate(List<WebElement> linesTable) {
         byte countErrors = 0;
-        for (int k=1; k<7 && countErrors==0;++k){
-            if (!linesTable.get(linesTable.size()-1).findElements(By.cssSelector("td")).get(k).getText().equals(
-                    linesTable.get(linesTable.size()-2).findElements(By.cssSelector("td")).get(k).getText())) {
+        for (int k = 1; k < 7 && countErrors == 0; ++k) {
+            if (!linesTable.get(linesTable.size() - 1).findElements(By.cssSelector("td")).get(k).getText().equals(
+                    linesTable.get(linesTable.size() - 2).findElements(By.cssSelector("td")).get(k).getText())) {
                 countErrors++;
             }
         }
-        return  countErrors==0;
+        return countErrors == 0;
     }
-    static void populateData(List<WebElement> linesTable, WebDriver driver){
+
+    private static void populateData(List<WebElement> linesTable, WebDriver driver) {
         Actions action = new Actions(driver);
-        for (int i=2; i < linesTable.size()-2; i+=2){
-            for (int k=1;k<7;++k) {
+        for (int i = 2; i < linesTable.size() - 2; i += 2) {
+            for (int k = 1; k < 7; ++k) {
                 String value = linesTable.get(i).findElements(By.cssSelector("td")).get(k).getText();
                 if (value != null) {
                     action.moveToElement(linesTable.get(i - 1).findElements(By.cssSelector("td")).get(k)).click().pause(400)

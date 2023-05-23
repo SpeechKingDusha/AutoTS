@@ -3,100 +3,80 @@ package com.amdocs;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ConfigTS {
-    private Map<Character,String> SpecSimb = new HashMap<Character,String>();
-    {
-        SpecSimb.put('\"',"%22");
-        SpecSimb.put('<',"%3c");
-        SpecSimb.put('^',"%5e");
-        SpecSimb.put('#',"%23");
-        SpecSimb.put('>',"%3e");
-        SpecSimb.put('{',"%7b");
-        SpecSimb.put('}',"%7d");
-        SpecSimb.put('|',"%7c");
-        SpecSimb.put('\\',"%5c");
-        SpecSimb.put('[',"%5b");
-        SpecSimb.put(']',"%5d");
-        SpecSimb.put('`',"%60");
-        SpecSimb.put('~',"%7e");
-        SpecSimb.put('\'',"%20");
-    }
+    private static final String URL = "prj.bi-telco.com/pwa/Timesheet.aspx";
 
-    final String URL = "prj.bi-telco.com/pwa/Timesheet.aspx";
-    private String UserName;
-    private  String Password;
+    private String userName;
+    private String password;
     private boolean isTestedMode;
 
 
     public ConfigTS(String jsonConf) {
         ConfigTS configTS = new Gson().fromJson(jsonConf, ConfigTS.class);
-        UserName = configTS.UserName;
+        userName = configTS.userName;
         //Password = changeScpec(DecodingPassword(configTS.Password));
-        Password = changeScpec(configTS.Password);
+        password = configTS.password;
         isTestedMode = configTS.isTestedMode;
     }
+
     public String getUsername() {
-        return UserName;
+        return "bell-main\\" + userName;
     }
-    public void setUsername(String username) {
-        UserName = username;
+
+    public void setUsername(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
+
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
     }
 
-    public String getUrlBaseAuth() {
-        return new StringBuilder ("https://bell-main%5c"+ UserName + ":" + Password + "@" + URL).toString();
+    public String getUrlBaseAuth(boolean authenticateByUrl) {
+        return authenticateByUrl
+                ? new StringBuilder("https://" + changeScpec(getUsername()) + ":" + changeScpec(getPassword()) + "@" + URL).toString()
+                : new StringBuilder("https://" + URL).toString();
     }
 
-    static public String readFileConfig (File file) {
-
-        StringBuilder body = new StringBuilder();
-        try(FileReader reader = new FileReader(file))
-        {
-            int c;
-            while((c=reader.read())!=-1){
-                body.append((char)c);
-            }
-        }
-        catch(IOException ex){
+    public static String readFileConfig(File file) {
+        try {
+            return Files.readString(file.toPath());
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
+            throw new IllegalStateException("Fail to read config from file " + file, ex);
         }
-        return body.toString();
     }
-    private String DecodingPassword(String password) {
+
+    private static String decodingPassword(String password) {
         var pas = password.toCharArray();
         int sumCodeWord = 0;
         String codeWord = new String();
 
         try {
             codeWord = InetAddress.getLocalHost().getHostName().toString();
-        }
-        catch (IOException ex){
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
 
-        for (char c: codeWord.toCharArray())
-        {
-            sumCodeWord += (int)c;
+        for (char c : codeWord.toCharArray()) {
+            sumCodeWord += (int) c;
         }
 
-        for (int i =0; i < pas.length; ++i)
-        {
-            pas[i] -='a';
+        for (int i = 0; i < pas.length; ++i) {
+            pas[i] -= 'a';
             pas[i] += (char) sumCodeWord;
         }
-        return  new String(pas);
+        return new String(pas);
     }
 
     public boolean isTestedMode() {
@@ -107,24 +87,8 @@ public class ConfigTS {
         isTestedMode = testedMode;
     }
 
-    private String changeScpec (String str){
-        StringBuffer strbl = new StringBuffer();
-        if (str==null) return null;
-
-        for(Map.Entry<Character, String> entry : SpecSimb.entrySet()) {
-            //str.replaceAll(entry.getKey().toString(), entry.getValue());
-            for (int i = 0; i<str.length(); ++i){
-                if (!entry.getKey().equals(str.charAt(i))) {
-                    strbl.append(str.charAt(i));
-                }
-                else {
-                    strbl.append(entry.getValue());
-                }
-
-            }
-
-        }
-
-        return str;
+    static String changeScpec(String str) {
+        return str == null ? null
+                : URLEncoder.encode(str, UTF_8).replace("+", "%20");
     }
 }
